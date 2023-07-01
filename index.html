@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>bookMarks</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/handlebars.min.js"></script>
+    <script src="./js/urlDate.js"></script>
+    <script src="./js/urlformat.js"></script>
+</head>
+
+<body>
+    <div class="container" id="container">
+
+        <!-- 侧边栏 -->
+        <aside class="left-bar" id="leftBar">
+            <div class="title">
+                <a href="">
+                    <p>bookMarks</p>
+                </a>
+            </div>
+            <nav class="nav">
+                <div class="line"></div>
+                <ul class="nav-item" id="navItem">
+                    <li><a href="#useful" class="active">✨常用</a></li>
+                    <li><a href="#mv">🎞️影音</a></li>
+                    <li><a href="#tool">🛠️工具</a></li>
+                    <li><a href="#ai">🤖AI在线</a></li>
+
+
+                </ul>
+        </aside>
+
+        <!-- <div class="headline"></div> -->
+
+        <!-- 主体-->
+        <section class="main">
+            <div id="mainContent">
+                <!-- 手机端菜单 -->
+                <div id="menu-box">
+                    <div id="menu">
+                        <input type="checkbox" id="menu-form">
+                        <label for="menu-form" class="menu-spin">
+                            <div class="line diagonal line-1"></div>
+                            <div class="line horizontal"></div>
+                            <div class="line diagonal line-2"></div>
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <!-- template -->
+                <div class="box">
+                    <!-- name 负责跳转索引 -->
+                    <a href="#" name="useful"></a>
+                    <div class="sub-category">
+                        <div>=>常用</div>
+                    </div>
+                    <div id="root_use"></div>
+                </div>
+
+                <div class="box">
+                    <!-- name 负责跳转索引 -->
+                    <a href="#" name="mv"></a>
+                    <div class="sub-category">
+                        <div>=>影音</div>
+                    </div>
+                    <div id="root_mv"></div>
+                </div>
+                <div class="box">
+                    <!-- name 负责跳转索引 -->
+                    <a href="#" name="tool"></a>
+                    <div class="sub-category">
+                        <div>=>工具</div>
+                    </div>
+                    <div id="root_tool"></div>
+                </div>
+                <div class="box">
+                    <!-- name 负责跳转索引 -->
+                    <a href="#" name="ai"></a>
+                    <div class="sub-category">
+                        <div>=>AI在线</div>
+                    </div>
+                    <div id="root_ai"></div>
+                </div>
+
+
+                <!-- ========template========== -->
+                <template id="li_tem">
+                    <div>
+                        <a target="_blank" href="{{web_url}}">
+                            <div class="item">
+                                <div class="logo"><img src="https://api.iowen.cn/favicon/{{domain}}.png" alt="{{web_name}}" onerror="this.src='img/favicon_default.ico'">&ensp;{{web_name}}</div>
+                                <div class="desc">{{web_des}}</div>
+                            </div>
+                        </a>
+                    </div>
+                </template>
+
+
+                <!-- ==================================页底部和返回页顶============================================== -->
+                <footer class="footer">
+                    <div class="copyright">
+                        <div>
+                            Copyright ©
+                            <a href="http://www.hurryf.top">hurryF_blog_bookMark</a>
+                        </div>
+                    </div>
+                </footer>
+
+                <div id="fixedBar"><svg class="Zi Zi--BackToTop" title="回到顶部" fill="currentColor" viewBox="0 0 24 24"
+                        width="24" height="24">
+                        <path
+                            d="M16.036 19.59a1 1 0 0 1-.997.995H9.032a.996.996 0 0 1-.997-.996v-7.005H5.03c-1.1 0-1.36-.633-.578-1.416L11.33 4.29a1.003 1.003 0 0 1 1.412 0l6.878 6.88c.782.78.523 1.415-.58 1.415h-3.004v7.005z">
+                        </path>
+                    </svg></div>
+        </section>
+
+
+
+
+       
+        <script>
+            // 页面渲染=============================================
+            window.onload = function () {
+
+                var list_use = []
+                var list_mv = []
+                var list_tool = []
+                var list_ai = []
+
+                for (i = 0; i < web_url_list.length; i++) {
+                    var data1 = web_url_list[i]
+                   
+                    var htmlNode = $("#li_tem").html(); // 获取标签内容
+                    var templateWithoutData = Handlebars.compile(htmlNode); // 生成没有数据的模板
+                    var templateWithData = templateWithoutData(data1); // 向没有数据的模板传数据
+
+                    if (data1.category === 0) {
+                        list_use.push(templateWithData)
+
+                    } else if (data1.category === 1) {
+                        list_mv.push(templateWithData)
+
+                    } else if (data1.category === 2) {
+                        list_tool.push(templateWithData)
+
+                    } else if (data1.category === 3) {
+                        list_ai.push(templateWithData)
+
+                    }
+                
+
+                }
+                var root_use = $('#root_use');root_use.html(list_use);
+                var root_mv = $('#root_mv');root_mv.html(list_mv);
+                var root_tool = $('#root_tool');root_tool.html(list_tool);
+                var root_ai = $('#root_ai');root_ai.html(list_ai)
+                           
+            }
+
+           
+            //页宽适应================================================
+            var oMenu = document.getElementById('menu');
+            var oLeftBar = document.getElementById('leftBar');
+            var menuFrom = document.getElementById('menu-form');
+
+            oMenu.onclick = function () {
+                if (oLeftBar.offsetLeft == 0) {
+                    oLeftBar.style.left = -249 + 'px';
+                }
+                else {
+                    oLeftBar.style.left = 0;
+                }
+            }
+
+
+            // 监听页面宽度变化
+            window.onresize = function () {
+                judgeWidth();
+                // console.log(document.documentElement.clientWidth);
+            };
+
+            // 判断页面宽度
+            function judgeWidth() {
+                if (document.documentElement.clientWidth > 481) {
+                    oLeftBar.style.left = 0;
+                } else {
+                    oLeftBar.style.left = -249 + 'px';
+                }
+            }
+
+
+            var oNavItem = document.getElementById('navItem');
+            var aA = oNavItem.getElementsByTagName('a');
+            for (var i = 0; i < aA.length; i++) {
+                aA[i].onclick = function () {
+                    for (var j = 0; j < aA.length; j++) {
+                        aA[j].className = '';
+                    }
+                    this.className = 'active';
+                    if (oLeftBar.offsetLeft == 0) {
+                        if (document.documentElement.clientWidth <= 481) {
+                            oLeftBar.style.left = -249 + 'px';
+                            menuFrom.checked = false;
+
+                        }
+                    }
+                }
+            }
+
+            // 回到頁面頂部
+            $(window).scroll(function () {
+                if ($(window).scrollTop() >= 200) {
+                    $('#fixedBar').fadeIn(300);
+                } else {
+                    $('#fixedBar').fadeOut(300);
+                }
+            });
+            $('#fixedBar').click(function () {
+                $('html,body').animate({ scrollTop: '0px' }, 800);
+            })
+        </script>
+</body>
+
+</html>
